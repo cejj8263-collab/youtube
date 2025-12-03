@@ -8,6 +8,9 @@ export default defineConfig({
     host: '0.0.0.0',
   },
   plugins: [react()],
+  define: {
+    'import.meta.env.VITE_GEMINI_API_KEY': JSON.stringify(process.env.VITE_GEMINI_API_KEY)
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, '.'),

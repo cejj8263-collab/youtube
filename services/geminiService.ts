@@ -1,8 +1,8 @@
 import { GoogleGenAI } from "@google/genai";
 import { CharacterProfile } from "../types";
 
-// Using gemini-2.5-flash-image for balanced speed and quality in image generation tasks
-const MODEL_NAME = 'gemini-2.5-flash-image';
+// Using gemini-1.5-flash for better quota availability
+const MODEL_NAME = 'gemini-1.5-flash';
 
 export const generateSceneImage = async (
   sceneText: string,

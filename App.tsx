@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import CharacterSetup from './components/CharacterSetup';
 import ScriptInput from './components/ScriptInput';
 import SceneCard from './components/SceneCard';
@@ -7,7 +7,11 @@ import { generateSceneImage } from './services/geminiService';
 import { Sparkles, Film, ArrowRight, Wand2 } from 'lucide-react';
 
 function App() {
-  const [apiKey, setApiKey] = useState('');
+  const [apiKey, setApiKey] = useState(() => {
+    // Load API key from localStorage on initial render
+    return localStorage.getItem('gemini_api_key') || '';
+  });
+  
   const [character, setCharacter] = useState<CharacterProfile>({
     name: '',
     description: '',
@@ -19,6 +23,13 @@ function App() {
   const [scenes, setScenes] = useState<Scene[]>([]);
   const [globalStatus, setGlobalStatus] = useState<GenerationStatus>(GenerationStatus.IDLE);
   const [isAnalyzed, setIsAnalyzed] = useState(false);
+
+  // Save API key to localStorage whenever it changes
+  useEffect(() => {
+    if (apiKey) {
+      localStorage.setItem('gemini_api_key', apiKey);
+    }
+  }, [apiKey]);
 
   // Helper to process sentences safely
   const splitScriptToSentences = (text: string): string[] => {

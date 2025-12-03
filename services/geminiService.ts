@@ -1,21 +1,19 @@
 import { GoogleGenAI } from "@google/genai";
 import { CharacterProfile } from "../types";
 
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-
-if (!apiKey) {
-  console.error('VITE_GEMINI_API_KEY is not set. Please add it to your environment variables.');
-}
-
-const ai = new GoogleGenAI({ apiKey: apiKey || '' });
-
 // Using gemini-2.5-flash-image for balanced speed and quality in image generation tasks
 const MODEL_NAME = 'gemini-2.5-flash-image';
 
 export const generateSceneImage = async (
   sceneText: string,
-  character: CharacterProfile
+  character: CharacterProfile,
+  apiKey: string
 ): Promise<string> => {
+  if (!apiKey) {
+    throw new Error('API key is missing. Please provide a valid API key.');
+  }
+  
+  const ai = new GoogleGenAI({ apiKey });
   try {
     const parts: any[] = [];
 

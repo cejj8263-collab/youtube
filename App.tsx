@@ -7,6 +7,7 @@ import { generateSceneImage } from './services/geminiService';
 import { Sparkles, Film, ArrowRight, Wand2 } from 'lucide-react';
 
 function App() {
+  const [apiKey, setApiKey] = useState('');
   const [character, setCharacter] = useState<CharacterProfile>({
     name: '',
     description: '',
@@ -52,6 +53,11 @@ function App() {
 
   // Step 2: Generate Images
   const handleStartGeneration = async () => {
+    if (!apiKey) {
+      alert('Gemini API 키를 입력해주세요.');
+      return;
+    }
+    
     if (!character.name && !character.description && !character.imageBase64) {
          if (!confirm("캐릭터 설정이 비어있습니다. 캐릭터 없이 진행하시겠습니까?")) {
              return;
@@ -71,7 +77,7 @@ function App() {
       setScenes(prev => prev.map(s => s.id === currentSceneId ? { ...s, status: 'generating' } : s));
 
       try {
-        const imageUrl = await generateSceneImage(scenes[i].originalText, character);
+        const imageUrl = await generateSceneImage(scenes[i].originalText, character, apiKey);
         
         setScenes(prev => prev.map(s => 
           s.id === currentSceneId 
@@ -97,7 +103,7 @@ function App() {
     setScenes(prev => prev.map(s => s.id === id ? { ...s, status: 'generating', errorMsg: undefined } : s));
 
     try {
-      const imageUrl = await generateSceneImage(sceneToRegen.originalText, character);
+      const imageUrl = await generateSceneImage(sceneToRegen.originalText, character, apiKey);
       setScenes(prev => prev.map(s => 
         s.id === id 
           ? { ...s, status: 'completed', imageUrl } 
@@ -126,6 +132,13 @@ function App() {
             </span>
           </div>
           <div className="flex items-center space-x-4">
+             <input
+               type="password"
+               placeholder="Gemini API 키 입력"
+               value={apiKey}
+               onChange={(e) => setApiKey(e.target.value)}
+               className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-slate-500 w-48"
+             />
              <div className="hidden md:flex items-center space-x-1 text-xs font-medium text-slate-500 bg-slate-800 px-3 py-1 rounded-full border border-slate-700">
                 <Sparkles className="w-3 h-3 text-yellow-500 mr-1" />
                 <span>Powered by Gemini 2.5 Flash</span>

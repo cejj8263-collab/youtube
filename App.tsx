@@ -12,11 +12,27 @@ function App() {
     return localStorage.getItem('gemini_api_key') || '';
   });
   
-  const [character, setCharacter] = useState<CharacterProfile>({
-    name: '',
-    description: '',
-    imageBase64: null,
-    mimeType: null,
+  const [character, setCharacter] = useState<CharacterProfile>(() => {
+    // Load character from localStorage on initial render
+    const savedCharacter = localStorage.getItem('character_profile');
+    if (savedCharacter) {
+      try {
+        return JSON.parse(savedCharacter);
+      } catch (e) {
+        return {
+          name: '',
+          description: '',
+          imageBase64: null,
+          mimeType: null,
+        };
+      }
+    }
+    return {
+      name: '',
+      description: '',
+      imageBase64: null,
+      mimeType: null,
+    };
   });
 
   const [script, setScript] = useState('');
@@ -30,6 +46,11 @@ function App() {
       localStorage.setItem('gemini_api_key', apiKey);
     }
   }, [apiKey]);
+
+  // Save character to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('character_profile', JSON.stringify(character));
+  }, [character]);
 
   // Helper to process sentences safely
   const splitScriptToSentences = (text: string): string[] => {

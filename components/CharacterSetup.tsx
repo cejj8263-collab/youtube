@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Upload, X, User } from 'lucide-react';
+import { Upload, X, User, Trash2 } from 'lucide-react';
 import { CharacterProfile } from '../types';
 
 interface CharacterSetupProps {
@@ -34,11 +34,35 @@ const CharacterSetup: React.FC<CharacterSetupProps> = ({ character, setCharacter
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
+  const handleClearCharacter = () => {
+    if (confirm('캐릭터 정보를 모두 삭제하시겠습니까?')) {
+      setCharacter({
+        name: '',
+        description: '',
+        imageBase64: null,
+        mimeType: null,
+      });
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      localStorage.removeItem('character_profile');
+    }
+  };
+
   return (
     <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-lg space-y-6 h-full">
-      <div className="flex items-center space-x-3 mb-2">
-        <User className="w-6 h-6 text-indigo-400" />
-        <h2 className="text-xl font-semibold text-white">캐릭터 설정</h2>
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center space-x-3">
+          <User className="w-6 h-6 text-indigo-400" />
+          <h2 className="text-xl font-semibold text-white">캐릭터 설정</h2>
+        </div>
+        {(character.name || character.description || character.imageBase64) && (
+          <button
+            onClick={handleClearCharacter}
+            className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
+            title="캐릭터 삭제"
+          >
+            <Trash2 className="w-5 h-5" />
+          </button>
+        )}
       </div>
       
       <p className="text-slate-400 text-sm">

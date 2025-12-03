@@ -1,6 +1,6 @@
 import React from 'react';
 import { Scene } from '../types';
-import { RefreshCw, AlertCircle, CheckCircle2, Image as ImageIcon, Clock } from 'lucide-react';
+import { RefreshCw, AlertCircle, CheckCircle2, Image as ImageIcon, Clock, Download } from 'lucide-react';
 
 interface SceneCardProps {
   scene: Scene;
@@ -28,6 +28,20 @@ const SceneCard: React.FC<SceneCardProps> = ({ scene, onRegenerate, index }) => 
                 title="크게 보기"
               >
                 <ImageIcon className="w-5 h-5" />
+              </button>
+              <button 
+                onClick={() => {
+                  const link = document.createElement('a');
+                  link.href = scene.imageUrl!;
+                  link.download = `scene-${index + 1}.png`;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+                className="p-2 bg-white/20 hover:bg-white/30 rounded-full text-white backdrop-blur-md transition-colors"
+                title="다운로드"
+              >
+                <Download className="w-5 h-5" />
               </button>
               <button 
                 onClick={() => onRegenerate(scene.id)}

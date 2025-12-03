@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { CharacterProfile } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
 // Using gemini-2.5-flash-image for balanced speed and quality in image generation tasks
 const MODEL_NAME = 'gemini-2.5-flash-image';

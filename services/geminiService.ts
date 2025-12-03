@@ -1,7 +1,13 @@
 import { GoogleGenAI } from "@google/genai";
 import { CharacterProfile } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
+if (!apiKey) {
+  console.error('VITE_GEMINI_API_KEY is not set. Please add it to your environment variables.');
+}
+
+const ai = new GoogleGenAI({ apiKey: apiKey || '' });
 
 // Using gemini-2.5-flash-image for balanced speed and quality in image generation tasks
 const MODEL_NAME = 'gemini-2.5-flash-image';
